@@ -20,6 +20,13 @@ object Assets:
       AssetType.Text(Font, AssetPath(baseUrl + "assets/" + Font + ".json"))
     )
 
-  def bootAssets(baseUrl: String): Set[AssetType] = Block.assets(baseUrl) ++ Text.assets(baseUrl)
+  object Button:
+    val Graphic: AssetName = AssetName("Button")
+
+    def assets(baseUrl: String): Set[AssetType] = Set(
+      AssetType.Image(Graphic, AssetPath(baseUrl + "assets/" + Graphic + ".png"))
+    )
+
+  def bootAssets(baseUrl: String): Set[AssetType] = Block.assets(baseUrl) ++ Text.assets(baseUrl) ++ Button.assets(baseUrl)
 
   def remainingAssets(baseUrl: String): Set[AssetType] = Set.empty

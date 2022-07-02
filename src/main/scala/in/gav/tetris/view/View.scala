@@ -1,10 +1,11 @@
 package in.gav.tetris.view
 
-import in.gav.tetris.scenes.play.view.PlayView
-import in.gav.tetris.scenes.loading.view.LoadingView
-import in.gav.tetris.scenes.menu.view.MenuView
+import in.gav.tetris.model.StartUpData
+import in.gav.tetris.scenes.loading.LoadingView
+import in.gav.tetris.scenes.menu.MenuView
+import in.gav.tetris.scenes.play.PlayView
 
 final case class View(loadingView: LoadingView, menuView: MenuView, playView: PlayView)
 
 object View:
-  val Init: View = View(LoadingView.Init, MenuView.Init, PlayView.Init)
+  def init(startupData: StartUpData): View = View(LoadingView.Init, MenuView.init(startupData), PlayView.Init)

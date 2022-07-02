@@ -1,7 +1,7 @@
 package in.gav.tetris.model
 
-import indigo.{Material, Radians, Size, Point, Graphic, RGBA}
-import in.gav.tetris.scenes.play.model.{PieceAngle, PieceShape}
+import in.gav.tetris.scenes.play.model.{Piece, PieceShape}
+import indigo.*
 
 /**
  * -1|1|3|5|7|9|11|13|15|17|19|21
@@ -33,11 +33,11 @@ import in.gav.tetris.scenes.play.model.{PieceAngle, PieceShape}
  * [DDL][DL ] [DR ][DRR]
  * [   ][DDL] [DDR][   ]
  */
-final case class Block(graphic: Graphic[Material.ImageEffects]):
+final case class BlockGraphics(graphic: Graphic[Material.ImageEffects]):
 
   lazy val size: Size = graphic.crop.halfSize
-  lazy val width: Int = size.width
-  lazy val height: Int = size.height
+  lazy val width: Int = (size.width * graphic.scale.x).toInt
+  lazy val height: Int = (size.height * graphic.scale.y).toInt
 
   lazy val boardEdge: List[Graphic[Material.ImageEffects]] = List(
     (-1 to 21 by 2).map(i => graphic.moveBy(i * width, -height)),
@@ -45,6 +45,15 @@ final case class Block(graphic: Graphic[Material.ImageEffects]):
     (-1 to 41 by 2).map(i => graphic.moveBy(-width, i * height)),
     (-1 to 41 by 2).map(i => graphic.moveBy(21 * width, i * height))
   ).flatten.map(_.withMaterial(graphic.material.withTint(RGBA.SlateGray)))
+
+  lazy val queueEdge: List[Graphic[Material.ImageEffects]] = List(
+    (27 to 37 by 2).map(i => graphic.moveBy(i * width, -height)),
+    (27 to 37 by 2).map(i => graphic.moveBy(i * width, 25 * height)),
+    (-1 to 25 by 2).map(i => graphic.moveBy(27 * width, i * height)),
+    (-1 to 25 by 2).map(i => graphic.moveBy(37 * width, i * height))
+  ).flatten.map(_.withMaterial(graphic.material.withTint(RGBA.SlateGray)))
+
+  lazy val queuePositions = Seq(Point(33 * width, 4 * height), Point(33 * width, 12 * height), Point(33 * width, 20 * height))
 
   lazy val dr: Graphic[Material.ImageEffects] = graphic.moveBy(width, height)
   lazy val ddr: Graphic[Material.ImageEffects] = graphic.moveBy(width, 3 * height)
@@ -73,7 +82,7 @@ final case class Block(graphic: Graphic[Material.ImageEffects]):
   def atPoint(x: Int, y: Int): Graphic[Material.ImageEffects] =
     graphic.moveBy(width * (1 + (2 * x)), height * (1 + (2 * y)))
 
-  def graphicsForShape(pieceShape: PieceShape, angle: PieceAngle): List[Graphic[Material.ImageEffects]] = pieceShape match {
+  def graphicsForShape(shape: PieceShape): List[Graphic[Material.ImageEffects]] = shape match {
     //    case _ => boardEdge
     case PieceShape.IShape => iShape
     case PieceShape.LShape => lShape

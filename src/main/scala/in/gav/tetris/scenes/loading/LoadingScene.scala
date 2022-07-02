@@ -5,8 +5,6 @@ import indigo.scenes.{Lens, Scene, SceneName}
 import indigoextras.subsystems.AssetBundleLoader
 import indigoextras.trees.QuadTree
 import in.gav.tetris.model.{Model, StartUpData}
-import in.gav.tetris.scenes.loading.model.LoadingModel
-import in.gav.tetris.scenes.loading.view.LoadingView
 import in.gav.tetris.view.View
 
 final case class LoadingScene(screenDimensions: Rectangle) extends Scene[StartUpData, Model, View] :

@@ -4,7 +4,7 @@ import indigo.*
 import indigo.json.Json
 import in.gav.tetris.assets.Assets
 
-final case class StartUpData(block: Block)
+final case class StartUpData(blockGraphics: BlockGraphics, buttonGraphics: ButtonGraphics)
 
 object StartUpData:
 
@@ -12,11 +12,12 @@ object StartUpData:
     for {
       block <- startBlock(bootData, assetCollection)
       font <- startFont(bootData, assetCollection)
+      buttons <- startButton(bootData, assetCollection)
     } yield {
-      Startup.Success(StartUpData(block), Set(), Set(font), Set())
+      Startup.Success(StartUpData(block, buttons), Set(), Set(font), Set())
     }
 
-  private def startBlock(bootData: BootData, assetCollection: AssetCollection): Outcome[Block] =
+  private def startBlock(bootData: BootData, assetCollection: AssetCollection): Outcome[BlockGraphics] =
     assetCollection.findImageDataByName(Assets.Block.Unit) match {
       case Some(value) =>
         val rect = Rectangle(Point.zero, Size(value.width, value.height))
@@ -26,8 +27,14 @@ object StartUpData:
         lazy val quarter = Point(horizontalQuarter, verticalQuarter)
         val graphic = Graphic(rect, 1, Material.ImageEffects(Assets.Block.Unit))
           .withRef(rect.center)
-          .moveTo(quarter.moveBy((-11 * value.width) / 2, (-21 * value.height) / 2))
-        Outcome(Block(graphic))
+          .scaleBy(0.2, 0.2)
+          .moveTo(quarter.moveBy((-11 * rect.width) / 10, (-21 * rect.height) / 10))
+        IndigoLogger.info(s"rect: ${rect}")
+        IndigoLogger.info(s"graphic.position: ${graphic.position}")
+        IndigoLogger.info(s"graphic.scale: ${graphic.scale}")
+        IndigoLogger.info(s"graphic.crop: ${graphic.crop}")
+
+        Outcome(BlockGraphics(graphic))
       case None => Outcome.Error(new NoSuchElementException("No Block image found"))
     }
 
@@ -48,3 +55,14 @@ object StartUpData:
     maybeFontInfo match
       case Some(fontInfo) => Outcome(fontInfo)
       case None => Outcome.Error(new NoSuchElementException("Font error"))
+
+  private def startButton(bootData: BootData, assetCollection: AssetCollection): Outcome[ButtonGraphics] =
+    assetCollection.findImageDataByName(Assets.Button.Graphic) match
+      case Some(value) =>
+        val rect = Rectangle(Size(value.width, value.height))
+        val graphic = Graphic(rect, Material.ImageEffects(Assets.Button.Graphic))
+          .moveTo(bootData.screenDimensions.center)
+          .scaleBy(4, 1)
+        Outcome(ButtonGraphics(graphic))
+      case None =>
+        Outcome.Error(new NoSuchElementException("No Button image found"))

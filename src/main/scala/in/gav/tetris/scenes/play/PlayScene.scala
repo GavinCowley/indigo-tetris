@@ -5,7 +5,6 @@ import indigo.*
 import indigoextras.trees.QuadTree
 import in.gav.tetris.model.{Model, StartUpData}
 import in.gav.tetris.scenes.play.model.PlayModel
-import in.gav.tetris.scenes.play.view.PlayView
 import in.gav.tetris.view.View
 
 final case class PlayScene() extends Scene[StartUpData, Model, View] :

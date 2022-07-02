@@ -22,7 +22,7 @@ object Tetris extends IndigoGame[BootData, StartUpData, Model, View] :
 
   override def eventFilters: EventFilters = EventFilters.BlockAll
 
-  override def boot(flags: Map[String, String]): Outcome[BootResult[BootData]] = Outcome {
+  override def boot(flags: Map[String, String]): Outcome[BootResult[BootData]] =
     val assetPath: String = flags.getOrElse("baseUrl", "")
 
     val config =
@@ -30,7 +30,7 @@ object Tetris extends IndigoGame[BootData, StartUpData, Model, View] :
         .withClearColor(RGBA.White)
         .withViewport(GameViewport.at1080p)
 
-    BootResult(
+    Outcome(BootResult(
       config,
       BootData(assetPath, config.screenDimensions),
       Set.empty,
@@ -38,8 +38,7 @@ object Tetris extends IndigoGame[BootData, StartUpData, Model, View] :
       Set.empty,
       Set(FPSCounter(Point(10, 10), FPS.Default, BindingKey("fps"))),
       Set.empty
-    )
-  }
+    ))
 
   override def setup(bootData: BootData, assetCollection: AssetCollection, dice: Dice): Outcome[Startup[StartUpData]] =
     StartUpData.setup(bootData, assetCollection)
@@ -48,7 +47,7 @@ object Tetris extends IndigoGame[BootData, StartUpData, Model, View] :
     Outcome(Model.Init)
 
   override def initialViewModel(startupData: StartUpData, model: Model): Outcome[View] =
-    Outcome(View.Init)
+    Outcome(View.init(startupData))
 
   override def updateModel(context: FrameContext[StartUpData], model: Model): GlobalEvent => Outcome[Model] =
     _ => Outcome(model)
