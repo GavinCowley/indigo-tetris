@@ -2,6 +2,8 @@
 
 This is a very basic tetris game made with [Indigo](https://indigoengine.io) - the Scala game engine.
 
+![](https://github.com/GavinCowley/indigo-tetris/blob/main/assets/Exmaple.png?raw=true)
+
 Not a very clean project, as I used this to learn some basic game engine mechanics as well some Scala 3.
 
 ## Contributing
